@@ -40,7 +40,7 @@ class Trader:
         self.gamma = 0.99
         self.epsilon = 0.1
         self.epsilon_min = 0.05  # 탐험(exploration)을 위한 엡실론
-        self.epsilon_decay = 0.995
+        self.epsilon_decay = 0.9995
         self.action_size = action_size
         self.steps_done = 0  # 학습 스텝 수
 
@@ -123,8 +123,8 @@ class Trader:
         if self.steps_done % 50 == 0:
             self.target_net.load_state_dict(self.policy_net.state_dict())
         
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.epsilon_decay
+            if self.epsilon > self.epsilon_min:
+                self.epsilon *= self.epsilon_decay
 
 def calculate_target_q_values(policy_net, target_net, next_state_batch, reward_batch, done_batch, gamma):
     # NumPy 배열을 Torch 텐서로 변환
