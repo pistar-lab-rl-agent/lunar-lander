@@ -6,26 +6,31 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
 class DQN(nn.Module):
     def __init__(self, state_size, action_size):
         super(DQN, self).__init__()
-        self.fc1 = nn.Linear(state_size, 128)  # 은닉층
-        self.fc2 = nn.Linear(128, 128)
-        self.fc3 = nn.Linear(128, action_size)  # 출력층
-
+        self.fc1 = nn.Linear(state_size, 256)  # 은닉층
+        self.fc2 = nn.Linear(256, 256)
+        self.fc3 = nn.Linear(256, 256)
+        self.fc4 = nn.Linear(256, action_size)  # 출력층
+        
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = self.fc3(x)
+        x = F.relu(self.fc3(x))
+        x = self.fc4(x)
         return x
 
 class Trader:
     def __init__(self, state_size, action_size):
-        self.policy_net = DQN(state_size, action_size)
-        self.target_net = DQN(state_size, action_size)
+        self.policy_net = DQN(state_size, action_size).to(device)
+        self.target_net = DQN(state_size, action_size).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()  # 타겟 네트워크는 평가 모드로 설정
-        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=0.001)
+        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=0.005)
         
         # NumPy를 사용한 리플레이 버퍼 초기화
         self.memory_capacity = 10000
@@ -36,7 +41,7 @@ class Trader:
         self.done_memory = np.zeros(self.memory_capacity, dtype=np.bool_)
         self.mem_cntr = 0  # 현재 메모리 인덱스
         
-        self.batch_size = 64
+        self.batch_size = 256
         self.gamma = 0.99
         self.epsilon = 0.1
         self.epsilon_min = 0.05  # 탐험(exploration)을 위한 엡실론
@@ -61,7 +66,7 @@ class Trader:
             return action
         else:
             with torch.no_grad():
-                state_tensor = torch.tensor(state, dtype=torch.float32)
+                state_tensor = torch.tensor(state, dtype=torch.float32).to(device)
                 q_values = self.policy_net(state_tensor)
                 action = q_values.argmax().item()
                 return action
@@ -102,8 +107,8 @@ class Trader:
         )
 
         # Torch 텐서로 변환
-        state_batch = torch.tensor(state_batch, dtype=torch.float32)
-        action_batch = torch.tensor(action_batch, dtype=torch.int64).unsqueeze(1)
+        state_batch = torch.tensor(state_batch, dtype=torch.float32).to(device)
+        action_batch = torch.tensor(action_batch, dtype=torch.int64).unsqueeze(1).to(device)
 
         # 현재 Q 값 계산
         q_values = self.policy_net(state_batch).gather(1, action_batch).squeeze()
@@ -128,9 +133,9 @@ class Trader:
 
 def calculate_target_q_values(policy_net, target_net, next_state_batch, reward_batch, done_batch, gamma):
     # NumPy 배열을 Torch 텐서로 변환
-    next_state_batch = torch.tensor(next_state_batch, dtype=torch.float32)
-    reward_batch = torch.tensor(reward_batch, dtype=torch.float32)
-    done_batch = torch.tensor(done_batch.astype(np.float32))
+    next_state_batch = torch.tensor(next_state_batch, dtype=torch.float32).to(device)
+    reward_batch = torch.tensor(reward_batch, dtype=torch.float32).to(device)
+    done_batch = torch.tensor(done_batch.astype(np.float32)).to(device)
 
     # 다음 상태에서의 최대 Q 값 계산
     with torch.no_grad():
