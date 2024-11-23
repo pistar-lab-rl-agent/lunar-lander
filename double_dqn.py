@@ -39,8 +39,8 @@ class Trader:
         self.batch_size = 64
         self.gamma = 0.99
         self.epsilon = 0.1
-        self.epsilon_min = 0.005  # 탐험(exploration)을 위한 엡실론
-        self.epsilon_decay = 0.99995
+        self.epsilon_min = 0.05  # 탐험(exploration)을 위한 엡실론
+        self.epsilon_decay = 0.995
         self.action_size = action_size
         self.steps_done = 0  # 학습 스텝 수
 

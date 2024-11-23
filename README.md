@@ -6,30 +6,35 @@ Simplest implementation of lunar-lander
 
 ### 12/7(SAT)/2024
 
-- [x] original DQN: Solved in episode `688`
-- [x] double DQN
-- [ ] dueling DQN
-- [ ] double dueling DQN
-- [ ] original DQN with PER
-- [ ] double DQN with PER
-- [ ] dueling DQN with PER
-- [ ] double dueling DQN with PER
-- [ ] A2C(n-step bootstrapping version)
+| Implementation                   | Status | Solved Episode |
+|----------------------------------|--------|----------------|
+| original DQN                     | [x]    | 688            |
+| double DQN                       | [x]    | N/A            |
+| dueling DQN                      | [ ]    | N/A            |
+| double dueling DQN               | [ ]    | N/A            |
+| original DQN with PER            | [ ]    | N/A            |
+| double DQN with PER              | [ ]    | N/A            |
+| dueling DQN with PER             | [ ]    | N/A            |
+| double dueling DQN with PER      | [ ]    | N/A            |
+| A2C(n-step bootstrapping version)| [ ]    | N/A            |
 
 ### 12/14(SAT)/2024
 
-- [ ] A2C(Monte Carlo version)
-- [ ] A2C(TD(0) version)
-- [ ] A2C(GAE version)
-- [ ] DDPG
-- [ ] PPO
+| Implementation                  | Status | Solved Episode |
+|---------------------------------|--------|----------------|
+| A2C(Monte Carlo version)        | [ ]    | N/A            |
+| A2C(TD(0) version)              | [ ]    | N/A            |
+| A2C(GAE version)                | [ ]    | N/A            |
+| DDPG                            | [ ]    | N/A            |
+| PPO                             | [ ]    | N/A            |
 
 ### 12/21(SAT)/2024
 
-- [ ] A3C
-- [ ] Distributed DQN
-- [ ] Distributed PPO
-
+| Implementation                  | Status | Solved Episode |
+|---------------------------------|--------|----------------|
+| A3C                             | [ ]    | N/A            |
+| Distributed DQN                 | [ ]    | N/A            |
+| Distributed PPO                 | [ ]    | N/A            |
 
 ## How to make benchmarks
 
