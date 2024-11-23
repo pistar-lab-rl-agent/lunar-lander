@@ -4,7 +4,7 @@ Simplest implementation of lunar-lander
 
 ## Implementations
 
-**12/7(SAT)/2024**
+12/7(SAT)/2024
 
 | Implementation                   | Status | Solved Episode |
 |----------------------------------|--------|----------------|
@@ -18,7 +18,7 @@ Simplest implementation of lunar-lander
 | double dueling DQN with PER      | [ ]    | N/A            |
 | A2C(n-step bootstrapping version)| [ ]    | N/A            |
 
-**12/14(SAT)/2024**
+12/14(SAT)/2024
 
 | Implementation                  | Status | Solved Episode |
 |---------------------------------|--------|----------------|
@@ -28,7 +28,7 @@ Simplest implementation of lunar-lander
 | DDPG                            | [ ]    | N/A            |
 | PPO                             | [ ]    | N/A            |
 
-**12/21(SAT)/2024**
+12/21(SAT)/2024
 
 | Implementation                  | Status | Solved Episode |
 |---------------------------------|--------|----------------|
