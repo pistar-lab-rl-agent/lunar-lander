@@ -2,8 +2,8 @@
 Simplest implementation of lunar-lander
 
 ## Implementations
-- [*] original DQN: Solved in episode `688`
-- [*] double DQN
+- [v] original DQN: Solved in episode `688`
+- [v] double DQN
 - [ ] dueling DQN
 - [ ] double dueling DQN
 - [ ] original DQN with PER
