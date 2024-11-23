@@ -39,8 +39,8 @@ class Trader:
         self.batch_size = 64
         self.gamma = 0.99
         self.epsilon = 0.1
-        self.epsilon_min = 0.01  # 탐험(exploration)을 위한 엡실론
-        self.epsilon_decay = 0.995
+        self.epsilon_min = 0.005  # 탐험(exploration)을 위한 엡실론
+        self.epsilon_decay = 0.99995
         self.action_size = action_size
         self.steps_done = 0  # 학습 스텝 수
 
@@ -98,7 +98,7 @@ class Trader:
 
         # 타겟 Q 값 계산
         target_q_values = calculate_target_q_values(
-            self.target_net, next_state_batch, reward_batch, done_batch, self.gamma
+            self.policy_net, self.target_net, next_state_batch, reward_batch, done_batch, self.gamma
         )
 
         # Torch 텐서로 변환
@@ -120,13 +120,13 @@ class Trader:
         self.optimizer.step()
 
         # 일정 간격으로 타겟 네트워크 업데이트
-        if self.steps_done % 10 == 0:
+        if self.steps_done % 50 == 0:
             self.target_net.load_state_dict(self.policy_net.state_dict())
         
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
-def calculate_target_q_values(target_net, next_state_batch, reward_batch, done_batch, gamma):
+def calculate_target_q_values(policy_net, target_net, next_state_batch, reward_batch, done_batch, gamma):
     # NumPy 배열을 Torch 텐서로 변환
     next_state_batch = torch.tensor(next_state_batch, dtype=torch.float32)
     reward_batch = torch.tensor(reward_batch, dtype=torch.float32)
@@ -134,7 +134,11 @@ def calculate_target_q_values(target_net, next_state_batch, reward_batch, done_b
 
     # 다음 상태에서의 최대 Q 값 계산
     with torch.no_grad():
-        next_q_values = target_net(next_state_batch).max(1)[0]
+        # Use policy_net to select the best action for the next state
+        next_actions = policy_net(next_state_batch).argmax(1)
+
+        # Use target_net to Evaluate the Q value of the selected action
+        next_q_values = target_net(next_state_batch).gather(1, next_actions.unsqueeze(1)).squeeze()
 
     # 타겟 Q 값 계산
     target_q_values = reward_batch + gamma * next_q_values * (1 - done_batch)
