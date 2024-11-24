@@ -12,8 +12,8 @@ Simplest implementation of lunar-lander
 | double DQN                       | [x]    | 912            | 배영민        |
 | dueling DQN                      | [ ]    | N/A            |             |
 | double dueling DQN               | [ ]    | N/A            |             |
-| original DQN with PER            | [ ]    | N/A            |             |
-| double DQN with PER              | [ ]    | N/A            |             |
+| original DQN with PER            | [ ]    | N/A            | 김범수        |
+| double DQN with PER              | [ ]    | N/A            | 김범수        |
 | dueling DQN with PER             | [ ]    | N/A            |             |
 | double dueling DQN with PER      | [ ]    | N/A            |             |
 | A2C(n-step bootstrapping version)| [ ]    | N/A            |             |
