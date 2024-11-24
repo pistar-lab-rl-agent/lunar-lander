@@ -25,7 +25,6 @@ class DQNAgent:
         # Hyperparameters
         self.discount_factor = 0.99
         self.learning_rate = 0.0005
-        self.tau = 0.5
         self.epsilon = 1.0
         self.epsilon_decay = 0.99995
         self.epsilon_min = 0.001
