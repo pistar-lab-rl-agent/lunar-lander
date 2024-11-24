@@ -206,7 +206,7 @@ if __name__ == "__main__":
 
     # Evaluate trained model
     mean_score, std_score = agent.evaluate(num_episodes=5, render=True)
-    print(f'Evaluation - Mean Reward: {mean_score:.2f} ± {std_score:.2f}')
+    print(f'Evaluation Result(Mean Reward): {mean_score:.2f} ± {std_score:.2f}')
 
 
 
