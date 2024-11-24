@@ -40,7 +40,7 @@ class DQNAgent:
         self.target_model = self.build_model()
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
 
-        # Initialize Target Model
+        # Initial Synchronization of Target Model
         self.update_target_model()
 
         if self.load_model:
