@@ -1,5 +1,6 @@
 # DQN(original version) For LunarLander-v3
 # It takes about 2 minutes to solve the environment on M2-max
+# Implemented by YH Lee
 
 import random
 import numpy as np
