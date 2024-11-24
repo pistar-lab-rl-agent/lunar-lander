@@ -72,11 +72,6 @@ class DQNAgent:
         self.memory.append((state, action, reward, next_state, done))
 
     def train_model(self):
-        if len(self.memory) < self.batch_size:
-            return
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.epsilon_decay
-
         mini_batch = random.sample(self.memory, self.batch_size)
 
         states = torch.FloatTensor(np.array([x[0] for x in mini_batch]))  # [64,8]
@@ -99,6 +94,10 @@ class DQNAgent:
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+
+        # Decrease epsilon
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
 
     def plot_scores(self, episodes, scores):
         plt.plot(episodes, scores)
