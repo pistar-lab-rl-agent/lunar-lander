@@ -184,7 +184,7 @@ if __name__ == "__main__":
                 agent.update_target_model()
 
             if done or truncated:
-                # # Synchronize target model with model at the end of an episode
+                # Synchronize target model with model at the end of an episode
                 agent.update_target_model()
 
                 # Record score and print out results
