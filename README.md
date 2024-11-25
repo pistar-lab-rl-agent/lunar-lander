@@ -22,9 +22,9 @@ Simplest implementation of lunar-lander
 
 | Implementation                  | Status | Solved Episode | Assigned To |
 |---------------------------------|--------|----------------|-------------|
-| A2C(Monte Carlo version)        | [ ]    | N/A            |             |
-| A2C(TD(0) version)              | [ ]    | N/A            |             |
-| A2C(GAE version)                | [ ]    | N/A            |             |
+| A2C(Monte Carlo version)        | [ ]    | N/A            |  임동휘      |
+| A2C(TD(0) version)              | [ ]    | N/A            |  임동휘      |
+| A2C(GAE version)                | [ ]    | N/A            |  임동휘      |
 | DDPG                            | [ ]    | N/A            |             |
 | PPO                             | [ ]    | N/A            |             |
 
