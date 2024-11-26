@@ -10,8 +10,8 @@ Simplest implementation of lunar-lander
 |----------------------------------|--------|----------------|-------------|
 | original DQN                     | [x]    | 688            | 배영민        |
 | double DQN                       | [x]    | 912            | 배영민        |
-| dueling DQN                      | [ ]    | N/A            |             |
-| double dueling DQN               | [ ]    | N/A            |             |
+| dueling DQN                      | [ ]    | N/A            | 임동휘        |
+| double dueling DQN               | [ ]    | N/A            | 임동휘        |
 | original DQN with PER            | [ ]    | N/A            | 김범수        |
 | double DQN with PER              | [ ]    | N/A            | 김범수        |
 | dueling DQN with PER             | [ ]    | N/A            |             |
@@ -22,9 +22,9 @@ Simplest implementation of lunar-lander
 
 | Implementation                  | Status | Solved Episode | Assigned To |
 |---------------------------------|--------|----------------|-------------|
-| A2C(Monte Carlo version)        | [ ]    | N/A            |  임동휘      |
-| A2C(TD(0) version)              | [ ]    | N/A            |  임동휘      |
-| A2C(GAE version)                | [ ]    | N/A            |  임동휘      |
+| A2C(Monte Carlo version)        | [ ]    | N/A            |             |
+| A2C(TD(0) version)              | [ ]    | N/A            |             |
+| A2C(GAE version)                | [ ]    | N/A            |             |
 | DDPG                            | [ ]    | N/A            |             |
 | PPO                             | [ ]    | N/A            |             |
 
