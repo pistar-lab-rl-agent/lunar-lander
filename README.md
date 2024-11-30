@@ -25,7 +25,7 @@ Simplest implementation of lunar-lander
 | A2C(Monte Carlo version)        | [ ]    | N/A            |             |
 | A2C(TD(0) version)              | [ ]    | N/A            |             |
 | A2C(GAE version)                | [ ]    | N/A            |             |
-| DDPG                            | [ ]    | N/A            |             |
+| DDPG                            | [ ]    | N/A            |   한일영          |
 | PPO                             | [ ]    | N/A            |             |
 
 12/21(SAT)/2024
