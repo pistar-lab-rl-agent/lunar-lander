@@ -9,14 +9,14 @@ Simplest implementation of lunar-lander
 | Implementation                   | Status | Solved Episode | Assigned To |
 |----------------------------------|--------|----------------|-------------|
 | original DQN (refactored)        | [x]    | 717            | 배영민        |
-| double DQN                       | [x]    | 912            | 배영민        |
+| double DQN                       | [x]    |            | 배영민        |
 | dueling DQN                      | [ ]    | N/A            | 임동휘        |
 | double dueling DQN               | [ ]    | N/A            | 임동휘        |
 | original DQN with PER            | [ ]    | N/A            | 김범수        |
 | double DQN with PER              | [ ]    | N/A            | 김범수        |
 | dueling DQN with PER             | [ ]    | N/A            | 이재영        |
 | double dueling DQN with PER      | [ ]    | N/A            | 이재영        |
-| A2C(n-step bootstrapping version)| [ ]    | N/A            |    이용환         |
+| A2C(n-step bootstrapping version)| [ ]    | N/A            | 이용환        |
 
 12/14(SAT)/2024
 
@@ -25,7 +25,7 @@ Simplest implementation of lunar-lander
 | A2C(Monte Carlo version)        | [ ]    | N/A            |             |
 | A2C(TD(0) version)              | [ ]    | N/A            |             |
 | A2C(GAE version)                | [ ]    | N/A            |             |
-| DDPG                            | [ ]    | N/A            |   한일영          |
+| DDPG                            | [ ]    | N/A            | 한일영        |
 | PPO                             | [ ]    | N/A            |             |
 
 12/21(SAT)/2024
@@ -53,5 +53,10 @@ RL 알고리즘 구현하실 때, 모두가 쉽게 공유하기 위해 다음을
 
 ## Installation
 ```bash
-conda install gymnasium-box2d -c conda-forge -y
+conda install gymnasium-box2d wandb -c conda-forge -y
+```
+
+### Optional-wandb
+```
+wandb login
 ```

@@ -1,189 +1,259 @@
+import abc
+from collections import deque
 import random
-import gymnasium
+from typing import Any
+import gymnasium as gym
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import wandb
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+class AbsAgent(abc.ABC):
+    @abc.abstractmethod
+    def get_action(self, state: np.ndarray) -> int:
+        pass
 
+    @abc.abstractmethod
+    def train(self, *arge, **kwargs) -> Any: 
+        pass
 
-class DQN(nn.Module):
-    def __init__(self, state_size, action_size):
-        super(DQN, self).__init__()
-        self.fc1 = nn.Linear(state_size, 256)  # 은닉층
-        self.fc2 = nn.Linear(256, 256)
-        self.fc3 = nn.Linear(256, 256)
-        self.fc4 = nn.Linear(256, action_size)  # 출력층
-        
-    def forward(self, x):
+    @abc.abstractmethod
+    def evaluate(self, *args, **kwargs) -> Any:
+        pass
+
+    @abc.abstractmethod
+    def done(self, *args, **kwargs) -> Any:
+        pass
+
+STATE = 0
+ACTION = 1
+REWARD = 2
+NEXT_STATE = 3
+DONE = 4
+
+class DQNModel(nn.Module):
+    def __init__(self, state_size: int, action_size: int):
+        super(DQNModel, self).__init__()
+        self.fc1 = nn.Linear(state_size, 128)  
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, action_size)  
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = self.fc4(x)
+        x = self.fc3(x)
         return x
-
-class Trader:
-    def __init__(self, state_size, action_size):
-        self.policy_net = DQN(state_size, action_size).to(device)
-        self.target_net = DQN(state_size, action_size).to(device)
-        self.target_net.load_state_dict(self.policy_net.state_dict())
-        self.target_net.eval()  # 타겟 네트워크는 평가 모드로 설정
-        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=0.005)
-        
-        # NumPy를 사용한 리플레이 버퍼 초기화
-        self.memory_capacity = 10000
-        self.state_memory = np.zeros((self.memory_capacity, state_size), dtype=np.float32)
-        self.action_memory = np.zeros(self.memory_capacity, dtype=np.int64)
-        self.reward_memory = np.zeros(self.memory_capacity, dtype=np.float32)
-        self.next_state_memory = np.zeros((self.memory_capacity, state_size), dtype=np.float32)
-        self.done_memory = np.zeros(self.memory_capacity, dtype=np.bool_)
-        self.mem_cntr = 0  # 현재 메모리 인덱스
-        
-        self.batch_size = 256
-        self.gamma = 0.99
-        self.epsilon = 0.1
-        self.epsilon_min = 0.05  # 탐험(exploration)을 위한 엡실론
-        self.epsilon_decay = 0.9995
+    
+class DQNAgent:
+    def __init__(
+        self, 
+        state_size: int, 
+        action_size: int
+    ):
+        self.state_size = state_size
         self.action_size = action_size
-        self.steps_done = 0  # 학습 스텝 수
 
-        # 로그를 위한 변수
-        self.loss_history = []
+        # Hyperparameters
+        self.discount_factor = 0.99
+        self.learning_rate = 0.0005
+        self.epsilon = 1.0
+        self.epsilon_decay = 0.99995
+        self.epsilon_min = 0.001
+        self.batch_size = 64
+        self.train_start = 640
+        self.step_counter = 0
+        self.target_update_period = 200
 
-    def get_action(self, state):
-        self.steps_done += 1
-        # Ensure state is a NumPy array with the correct shape
-        if isinstance(state, tuple):
-            state = state[0]  # Extract the first element if state is a tuple
-        state = np.array(state, dtype=np.float32)
-        state = state.reshape(1, -1)  # Reshape to (1, state_size)
-        
-        # Epsilon-greedy policy
-        if random.random() < self.epsilon:
-            action = random.randrange(self.action_size)
-            return action
+        # Replay Buffer
+        self.memory: deque[tuple] = deque(maxlen=10000)
+
+        # Model and Target Model
+        self.policy_net   = DQNModel(state_size, action_size)
+        self.target_model = DQNModel(state_size, action_size)
+        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=self.learning_rate)
+
+        # Initial Synchronization of Target Model
+        self.update_target_model()
+
+        # For logging
+        self.loss_history: list[int] = []
+    
+    def get_action(self, state: np.ndarray) -> int:
+        self.step_counter += 1
+        if random.random() <= self.epsilon:
+            return random.randrange(0, self.action_size - 1)
         else:
             with torch.no_grad():
-                state_tensor = torch.tensor(state, dtype=torch.float32).to(device)
-                q_values = self.policy_net(state_tensor)
-                action = q_values.argmax().item()
-                return action
-
-    def store_transition(self, state, action, reward, next_state, done):
-        index = self.mem_cntr % self.memory_capacity  # 순환 버퍼
-        # Ensure state and next_state are 1D arrays
-        if isinstance(state, tuple):
-            state = state[0]  # Extract the first element if state is a tuple 
-        state = np.array(state, dtype=np.float32).flatten()
-        next_state = np.array(next_state, dtype=np.float32).flatten()
-        
-        self.state_memory[index] = state
-        self.action_memory[index] = action
-        self.reward_memory[index] = reward
-        self.next_state_memory[index] = next_state
-        self.done_memory[index] = done
-        self.mem_cntr += 1
+                return self.policy_net(
+                    torch.FloatTensor(state)
+                ).argmax().item()
+    
+    def update_target_model(self):
+        self.target_model.load_state_dict(self.policy_net.state_dict())
 
     def train(self):
-        # 메모리 크기가 1000 이상일 때에만 학습 진행
-        if self.mem_cntr < 1000:
-            return  # 충분한 메모리가 쌓일 때까지 대기
+        mini_batch = random.sample(self.memory, self.batch_size)
 
-        max_mem = min(self.mem_cntr, self.memory_capacity)
-        batch_indices = np.random.choice(max_mem, self.batch_size, replace=False)
-        
-        # NumPy 배열에서 배치 데이터 가져오기
-        state_batch = self.state_memory[batch_indices]
-        action_batch = self.action_memory[batch_indices]
-        reward_batch = self.reward_memory[batch_indices]
-        next_state_batch = self.next_state_memory[batch_indices]
-        done_batch = self.done_memory[batch_indices]
+        states = torch.FloatTensor(np.array([x[STATE] for x in mini_batch]))    # [64,8]
+        actions = torch.LongTensor(np.array([x[ACTION] for x in mini_batch]))   # [64]
+        rewards = torch.FloatTensor(np.array([x[REWARD] for x in mini_batch]))  # [64]
+        next_states = torch.FloatTensor(np.array([x[NEXT_STATE] for x in mini_batch]))  # [64,8]
+        dones = torch.FloatTensor(np.array([x[DONE] for x in mini_batch]))      # [64]
 
-        # 타겟 Q 값 계산
-        target_q_values = calculate_target_q_values(
-            self.policy_net, self.target_net, next_state_batch, reward_batch, done_batch, self.gamma
-        )
+        if states.shape != (self.batch_size, self.state_size):
+            raise ValueError(
+                f"Expected states to have shape {(self.batch_size, self.state_size)}, but got {states.shape}"
+            )
 
-        # Torch 텐서로 변환
-        state_batch = torch.tensor(state_batch, dtype=torch.float32).to(device)
-        action_batch = torch.tensor(action_batch, dtype=torch.int64).unsqueeze(1).to(device)
 
-        # 현재 Q 값 계산
-        q_values = self.policy_net(state_batch).gather(1, action_batch).squeeze()
+        # Current Q-values for the chosen actions
+        curr_Q = self.policy_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+        # Action selection using the policy network
+        MAX_ARGS_IDX = 1
+        next_action = self.policy_net(next_states).max(1)[MAX_ARGS_IDX].unsqueeze(1)
+        # Q-value evaluation using the target network
+        next_Q = self.target_model(next_states).gather(1, next_action).squeeze(1).detach()
+        # Target Q-values
+        expected_Q = rewards + self.discount_factor * next_Q * (1 - dones)  # [64]
 
-        # 손실 계산
-        loss = F.mse_loss(q_values, target_q_values)
+        # Loss
+        loss = F.mse_loss(curr_Q, expected_Q.detach())
 
-        # 손실 값 로그에 저장
-        self.loss_history.append(loss.item())
-
-        # 역전파 및 옵티마이저 스텝
+        # Update Parameters
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
 
-        # 일정 간격으로 타겟 네트워크 업데이트
-        if self.steps_done % 50 == 0:
-            self.target_net.load_state_dict(self.policy_net.state_dict())
-        
-            if self.epsilon > self.epsilon_min:
-                self.epsilon *= self.epsilon_decay
+        # Log Loss
+        self.loss_history.append(loss.item())
 
-def calculate_target_q_values(policy_net, target_net, next_state_batch, reward_batch, done_batch, gamma):
-    # NumPy 배열을 Torch 텐서로 변환
-    next_state_batch = torch.tensor(next_state_batch, dtype=torch.float32).to(device)
-    reward_batch = torch.tensor(reward_batch, dtype=torch.float32).to(device)
-    done_batch = torch.tensor(done_batch.astype(np.float32)).to(device)
+        if self.step_counter % self.target_update_period == 0:
+            self.update_target_model()
 
-    # 다음 상태에서의 최대 Q 값 계산
-    with torch.no_grad():
-        # Use policy_net to select the best action for the next state
-        next_actions = policy_net(next_state_batch).argmax(1)
+        # Decrease epsilon
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
 
-        # Use target_net to Evaluate the Q value of the selected action
-        next_q_values = target_net(next_state_batch).gather(1, next_actions.unsqueeze(1)).squeeze()
+    def evaluate(self, num_episodes=5, render=False):
+        env = gym.make('LunarLander-v3', render_mode='human' if render else None)
+        self.policy_net.eval()
+        self.epsilon = 0
+        evaluation_scores = []
 
-    # 타겟 Q 값 계산
-    target_q_values = reward_batch + gamma * next_q_values * (1 - done_batch)
+        for _ in range(num_episodes):
+            state, _ = env.reset()
+            score = 0
+            done = False
+            truncated = False
 
-    return target_q_values
+            while not (done or truncated):
+                action = self.get_action(state)
+                next_state, reward, done, truncated, _ = env.step(action)
+                score += reward
+                state = next_state
 
+            evaluation_scores.append(score)
+
+        env.close()
+        return np.mean(evaluation_scores), np.std(evaluation_scores)
+    
+    def done(self):
+        self.update_target_model()
+            
+
+def init_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
 
 def main():
-    env = gymnasium.make("LunarLander-v3")
+    
+    
+    init_seed(7)
+    env = gym.make("LunarLander-v3")
     state_size = env.observation_space.shape[0]
     action_size = env.action_space.n
-    agent = Trader(state_size, action_size)
+    agent = DQNAgent(state_size, action_size)
 
-    num_episodes = 1000 
-    recent_rewards = []
+    scores, episodes = [], []
+    EPOCHS = 1000
+    TARGET_SCORE = 260
 
-    for episode in range(num_episodes):
-        state = env.reset()
-        total_reward = 0  # 에피소드별 총 보상
+    wandb.init(
+        project="pistar-lab-lunar-lander",
+        config={
+            "seed": 7,
+            "state_size": state_size,
+            "action_size": action_size,
+            "discount_factor": agent.discount_factor,
+            "learning_rate": agent.learning_rate,
+            "epsilon": agent.epsilon,
+            "epsilon_decay": agent.epsilon_decay,
+            "epsilon_min": agent.epsilon_min,
+            "batch_size": agent.batch_size,
+            "train_start": agent.train_start,
+            "target_update_period": agent.target_update_period,
+            "epochs": EPOCHS,
+            "target_score": TARGET_SCORE
+        }
+    )
+
+    for epoch in range(EPOCHS):
         done = False
-        step = 0
-        
-        while not done:
+        turncated = False
+        score = 0
+
+        state, _ = env.reset()
+        while not(done or turncated):
             action = agent.get_action(state)
-            next_state, reward, done, _, _ = env.step(action)
-            agent.store_transition(state, action, reward, next_state, done)
-            agent.train()
+            next_state, reward, done, turncated, info = env.step(action)
+            agent.memory.append((state, action, reward, next_state, done))
+            if len(agent.memory) >= agent.train_start:
+                agent.train()
+            score += reward
             state = next_state
-            total_reward += reward
-            recent_rewards.append(reward)
-            step += 1
 
-        if episode >= 30 and (episode + 1) % 100 == 0:
-            _recent_rewards = [recent_rewards[i] for i in range(-30, 0)]
-            if np.mean(_recent_rewards) > 200:
-                print(f"Solved in episode: {episode + 1}")
-                break
+            if agent.step_counter % 100 == 0:
+                wandb.log({"score": score, "epsilon": agent.epsilon, "step_counter": agent.step_counter})
 
-        avg_loss = np.mean(agent.loss_history[-agent.steps_done:])
-        print(f"Episode {episode + 1} ended - Total Reward: {total_reward}, Average Loss: {avg_loss:.4f}, Epsilon: {agent.epsilon:.4f}")
+            if done or turncated:
+                agent.done()
+                
+                scores.append(score)
+                episodes.append(epoch)
+                avg_score = np.mean(scores[-min(30, len(scores)):])
+                print(
+                    f'episode:{epoch} '
+                    f'score:{score:.3f}, '
+                    f'avg_score:{avg_score:.3f}, '
+                    f'epsilon:{agent.epsilon:.3f}, '
+                    f'step_counter:{agent.step_counter}'
+                )
+                wandb.log({"avg_score": avg_score})
+    
+        if avg_score > TARGET_SCORE:
+            print(f"Solved in episode: {epoch + 1}")
+            break
+    
+    def plot(scores, episodes):
+        import matplotlib.pyplot as plt
+        plt.plot(episodes, scores)
+        plt.title('original DQN For LunarLander-v3')
+        plt.xlabel('Episode', fontsize=14)
+        plt.ylabel('Score', fontsize=14)
+        plt.grid()
+        plt.show()
 
+    plot(scores, episodes)
+    mean_score, std_score = agent.evaluate(num_episodes=5, render=True)
+    print(f"Evaluated Result(Mean Score: {mean_score:.3f}, Std Score: {std_score:.3f})")
+    wandb.log({"mean_score": mean_score, "std_score": std_score})
+    
 if __name__ == "__main__":
     main()
+        
+        
+    
