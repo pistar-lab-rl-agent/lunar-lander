@@ -38,7 +38,7 @@ Simplest implementation of lunar-lander
 
 ## How to make benchmarks
 
-- `lunar-lander-v3` 기준으로 연속 30개 에피소드 평균 스코어가 200을 넘기면 solved로 간주합니다.
+- `lunar-lander-v3` 기준으로 연속 30개 에피소드 평균 스코어가 260을 넘기면 solved로 간주합니다.
 
 ## Code convention
 
@@ -52,11 +52,13 @@ RL 알고리즘 구현하실 때, 모두가 쉽게 공유하기 위해 다음을
 아시다시피 비교적 간단한 작업을 여러 디렉토리에 분산된 `.py` 파일들로 만들면 뜯어보는데 너무 시간이 소모됩니다. 
 
 ## Installation
+
 ```bash
 conda install gymnasium-box2d wandb -c conda-forge -y
 ```
 
 ### Optional-wandb
+
 ```
 wandb login
 ```
