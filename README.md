@@ -11,7 +11,7 @@ Simplest implementation of lunar-lander
 | original DQN (refactored)        | [x]    | 717            | 배영민        |
 | double DQN (refactored)          | [x]    | 395            | 배영민        |
 | dueling DQN                      | [x]    | 408            | 임동휘        |
-| double dueling DQN               | [x]    | 465            | 임동휘        |
+| double dueling DQN               | [x]    | 328            | 임동휘        |
 | original DQN with PER            | [ ]    | N/A            | 김범수        |
 | double DQN with PER              | [ ]    | N/A            | 김범수        |
 | dueling DQN with PER             | [ ]    | N/A            | 이재영        |
