@@ -32,7 +32,7 @@ Simplest implementation of lunar-lander
 
 | Implementation                  | Status | Solved Episode | Assigned To |
 |---------------------------------|--------|----------------|-------------|
-| A3C                             | [ ]    | N/A            |             |
+| A3C                             | [ ]    | N/A            | 이동훈      |
 | Distributed DQN                 | [ ]    | N/A            |             |
 | Distributed PPO                 | [ ]    | N/A            |             |
 
