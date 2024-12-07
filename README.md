@@ -8,15 +8,15 @@ Simplest implementation of lunar-lander
 
 | Implementation                   | Status | Solved Episode | Assigned To |
 |----------------------------------|--------|----------------|-------------|
-| original DQN (refactored)        | [x]    | 717            | 배영민        |
-| double DQN (refactored)          | [x]    | 395            | 배영민        |
+| original DQN                     | [x]    | 717            | 배영민        |
+| double DQN                       | [x]    | 327            | 배영민        |
 | dueling DQN                      | [x]    | 408            | 임동휘        |
 | double dueling DQN               | [x]    | 328            | 임동휘        |
 | original DQN with PER            | [x]    | 471            | 김범수        |
 | double DQN with PER              | [x]    | 453            | 김범수        |
 | dueling DQN with PER             | [x]    | 671            | 이재영        |
 | double dueling DQN with PER      | [x]    | 455            | 이재영        |
-| A2C(n-step bootstrapping version)| [x]    | 6587            | 이용환        |
+| A2C(n-step bootstrapping version)| [x]    | 6587           | 이용환        |
 
 12/14(SAT)/2024
 
