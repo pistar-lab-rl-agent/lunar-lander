@@ -34,7 +34,7 @@ Simplest implementation of lunar-lander
 |---------------------------------|--------|----------------|-------------|
 | A3C                             | [ ]    | N/A            | 이동훈      |
 | Distributed DQN                 | [ ]    | N/A            | 이승수      |
-| Distributed PPO                 | [ ]    | N/A            |             |
+| Distributed PPO                 | [ ]    | N/A            | 이경민      |
 
 ## How to make benchmarks
 
