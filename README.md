@@ -12,11 +12,11 @@ Simplest implementation of lunar-lander
 | double DQN (refactored)          | [x]    | 395            | 배영민        |
 | dueling DQN                      | [x]    | 408            | 임동휘        |
 | double dueling DQN               | [x]    | 328            | 임동휘        |
-| original DQN with PER            | [ ]    | N/A            | 김범수        |
-| double DQN with PER              | [ ]    | N/A            | 김범수        |
-| dueling DQN with PER             | [ ]    | N/A            | 이재영        |
-| double dueling DQN with PER      | [ ]    | N/A            | 이재영        |
-| A2C(n-step bootstrapping version)| [x]    | 6587           | 이용환        |
+| original DQN with PER            | [x]    | 471            | 김범수        |
+| double DQN with PER              | [x]    | 453            | 김범수        |
+| dueling DQN with PER             | [x]    | 671            | 이재영        |
+| double dueling DQN with PER      | [x]    | 455            | 이재영        |
+| A2C(n-step bootstrapping version)| [x]    | 6587            | 이용환        |
 
 12/14(SAT)/2024
 
@@ -26,7 +26,7 @@ Simplest implementation of lunar-lander
 | A2C(TD(0) version)              | [ ]    | N/A            |             |
 | A2C(GAE version)                | [ ]    | N/A            |             |
 | DDPG                            | [ ]    | N/A            | 한일영        |
-| PPO                             | [ ]    | N/A            |             |
+| PPO                             | [ ]    | N/A            | 지민기       |
 
 12/21(SAT)/2024
 
@@ -34,7 +34,7 @@ Simplest implementation of lunar-lander
 |---------------------------------|--------|----------------|-------------|
 | A3C                             | [ ]    | N/A            | 이동훈      |
 | Distributed DQN                 | [ ]    | N/A            | 이승수      |
-| Distributed PPO                 | [ ]    | N/A            |             |
+| Distributed PPO                 | [ ]    | N/A            | 이경민      |
 
 ## How to make benchmarks
 
