@@ -212,9 +212,9 @@ def main():
     hidden_dim = 128
     actor_lr = 0.0003
     critic_lr = 0.0002
-    gamma = 0.99
+    gamma = 0.999
     entropy_coef = 0.001
-    n_steps = 7
+    n_steps = 9
 
     agent = A2CNStepAgent(
         state_size=state_size,
