@@ -10,6 +10,13 @@ import torch.optim as optim
 import torch.nn.functional as F
 import wandb
 
+def init_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+
+
 class AbsAgent(abc.ABC):
     @abc.abstractmethod
     def get_action(self, state: np.ndarray) -> int:
@@ -90,9 +97,6 @@ class DQNAgent:
                     torch.FloatTensor(state)
                 ).argmax().item()
     
-    def update_target_model(self):
-        self.target_model.load_state_dict(self.policy_net.state_dict())
-
     def train(self):
         mini_batch = random.sample(self.memory, self.batch_size)
 
@@ -157,17 +161,13 @@ class DQNAgent:
     
     def done(self):
         self.update_target_model()
+
+    def update_target_model(self):
+        self.target_model.load_state_dict(self.policy_net.state_dict())
             
 
-def init_seed(seed: int):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
 
 def main():
-    
-    
     init_seed(7)
     env = gym.make("LunarLander-v3")
     state_size = env.observation_space.shape[0]
