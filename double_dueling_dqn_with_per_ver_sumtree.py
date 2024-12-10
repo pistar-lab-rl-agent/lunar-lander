@@ -392,7 +392,7 @@ class DQNAgent:
     def get_action(self, state: np.ndarray) -> int:
         self.step_counter += 1
         if random.random() <= self.epsilon:
-            return random.randrange(0, self.action_size - 1)
+            return random.randrange(0, self.action_size)
         else:
             with torch.no_grad():
                 return self.policy_net(
