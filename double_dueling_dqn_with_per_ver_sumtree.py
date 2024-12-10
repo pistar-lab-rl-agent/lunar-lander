@@ -278,7 +278,7 @@ class PrioritizedReplayBuffer(ReplayBuffer):
             rews=rews,
             done=done,
             weights=weights,
-            indices=indices,
+            indices=indices, # type: ignore
         )
         
     def update_priorities(self, indices: List[int], priorities: np.ndarray):
