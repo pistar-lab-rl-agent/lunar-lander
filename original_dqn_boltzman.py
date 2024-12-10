@@ -89,7 +89,7 @@ class DQNAgent:
         # For logging
         self.loss_history: list[int] = []
     
-    def get_action(self, state: np.ndarray) -> int:
+    def get_action(self, state: np.ndarray) -> int | Any:
         self.step_counter += 1
         state_t = torch.FloatTensor(state).unsqueeze(0)
 
