@@ -1,5 +1,3 @@
-# Dueling DQN For LunarLander-v3
-# using sum tree for prioritized sampling
 # It took about 22 min to solve the env at 1560 epochs on RTX 3080 Ti Laptop, i9-12900H
 
 import abc

@@ -9,6 +9,7 @@ Simplest implementation of lunar-lander
 | Implementation                   | Status | Solved Episode | Assigned To |
 |----------------------------------|--------|----------------|-------------|
 | original DQN                     | [x]    | 717            | 배영민        |
+| original DQN with Boltzman       | [x]    | 306            | 배영민        |
 | double DQN                       | [x]    | 327            | 배영민        |
 | dueling DQN                      | [x]    | 408            | 임동휘        |
 | double dueling DQN               | [x]    | 328            | 임동휘        |
