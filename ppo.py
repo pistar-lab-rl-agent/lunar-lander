@@ -220,13 +220,13 @@ def main():
             'epochs': EPOCHS,
             'target_score': TARGET_SCORE,
 
-            'learning_rate': 0.0005,
-            'discount_factor': 0.99,
-            'eps_clip': 0.2,
-            'k_epoch': 5,
-            'dropout_rate': 0.1,
-            'is_prelu': True,
-            'is_custom_init': True
+            # 'learning_rate': 0.0005,
+            # 'discount_factor': 0.99,
+            # 'eps_clip': 0.2,
+            # 'k_epoch': 5,
+            # 'dropout_rate': 0.1,
+            # 'is_prelu': True,
+            # 'is_custom_init': True
         }
     )
 
@@ -257,12 +257,12 @@ def main():
                 scores.append(score)
                 episodes.append(epoch)
                 avg_score = np.mean(scores[-min(30, len(scores)):])
-                print(
-                    f'episode:{epoch} '
-                    f'score:{score:.3f}, '
-                    f'avg_score:{avg_score:.3f}, '
-                    f'step_counter:{agent.step_counter}'
-                )
+                # print(
+                #     f'episode:{epoch} '
+                #     f'score:{score:.3f}, '
+                #     f'avg_score:{avg_score:.3f}, '
+                #     f'step_counter:{agent.step_counter}'
+                # )
                 wandb.log({'avg_score': avg_score})
 
         if avg_score > TARGET_SCORE:
@@ -287,7 +287,7 @@ def main():
 if __name__ == '__main__':
     sweep_configuration = {
         'method': 'bayes',
-        'name': 'sweep3',
+        'name': 'sweep2',
         'metric': {'goal': 'maximize', 'name': 'avg_score'},
         'parameters':
             {
