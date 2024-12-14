@@ -3,6 +3,16 @@ PPO algorithm.
 
 ref
 - https://github.com/bentrevett/pytorch-rl/blob/master/5a%20-%20Proximal%20Policy%20Optimization%20(PPO)%20%5BLunarLander%5D.ipynb
+
+max_score: 281.4308
+
+hyperparams:
+discount_rate = 0.98231
+eps_clip = 0.22885
+is_custom_init = True
+is_prelu = True
+k_epoch = 5
+learning_rate = 0.00029638
 """
 import random
 from typing import Tuple
@@ -209,7 +219,7 @@ def main():
 
     scores, episodes = [], []
     EPOCHS = 1000
-    TARGET_SCORE = 260
+    TARGET_SCORE = 200
 
     wandb.init(
         project='ppo',
@@ -219,12 +229,12 @@ def main():
             'action_size': action_size,
             'epochs': EPOCHS,
             'target_score': TARGET_SCORE,
+            'dropout_rate': 0.0,
 
-            # 'learning_rate': 0.0005,
-            # 'discount_factor': 0.99,
-            # 'eps_clip': 0.2,
+            # 'learning_rate': 0.00029638,
+            # 'discount_factor': 0.98231,
+            # 'eps_clip': 0.22885,
             # 'k_epoch': 5,
-            # 'dropout_rate': 0.1,
             # 'is_prelu': True,
             # 'is_custom_init': True
         }
@@ -234,6 +244,7 @@ def main():
                      discount_factor=wandb.config.discount_factor, eps_clip=wandb.config.eps_clip,
                      k_epoch=wandb.config.k_epoch, dropout_rate=wandb.config.dropout_rate,
                      is_prelu=wandb.config.is_prelu, is_custom_init=wandb.config.is_custom_init)
+    max_score = -9999999999
 
     for epoch in range(EPOCHS):
         done = False
@@ -257,13 +268,19 @@ def main():
                 scores.append(score)
                 episodes.append(epoch)
                 avg_score = np.mean(scores[-min(30, len(scores)):])
-                print(
-                    f'episode:{epoch} '
-                    f'score:{score:.3f}, '
-                    f'avg_score:{avg_score:.3f}, '
-                    f'step_counter:{agent.step_counter}'
-                )
+                max_score = max(max_score, avg_score)
+                # print(
+                #     f'episode:{epoch} '
+                #     f'score:{score:.3f}, '
+                #     f'avg_score:{avg_score:.3f}, '
+                #     f'step_counter:{agent.step_counter}'
+                # )
                 wandb.log({'avg_score': avg_score})
+
+        if (epoch + 1) % 25 == 0:
+            mean_score, std_score = agent.evaluate(num_episodes=5, render=False)
+            max_score = max(max_score, mean_score)
+            wandb.log({'max_score': max_score})
 
         if avg_score > TARGET_SCORE:
             print(f'Solved in episode: {epoch + 1}')
@@ -288,17 +305,17 @@ if __name__ == '__main__':
     sweep_configuration = {
         'method': 'bayes',
         'name': 'sweep3',
-        'metric': {'goal': 'maximize', 'name': 'avg_score'},
+        'metric': {'goal': 'maximize', 'name': 'max_score'},
         'parameters':
             {
-                'learning_rate': {'distribution': 'log_uniform_values', 'max': 0.005, 'min': 0.00001},
-                'discount_factor': {'distribution': 'log_uniform_values', 'max': 1.0, 'min': 0.9},
+                'learning_rate': {'distribution': 'log_uniform_values', 'max': 0.001, 'min': 0.00001},
+                'discount_factor': {'distribution': 'log_uniform_values', 'max': 1.0, 'min': 0.98},
                 'eps_clip': {'distribution': 'log_uniform_values', 'max': 0.3, 'min': 0.01},
-                'k_epoch': {'distribution': 'int_uniform', 'max': 10, 'min': 1},
-                'dropout_rate': {'distribution': 'log_uniform_values', 'max': 0.4, 'min': 0.00001},
+                'k_epoch': {'distribution': 'int_uniform', 'max': 10, 'min': 3},
+                # 'dropout_rate': {'distribution': 'log_uniform_values', 'max': 0.00, 'min': 0.00001},
                 'is_prelu': {'values': [True]},
                 'is_custom_init': {'values': [True]}
             }
     }
     sweep_id = wandb.sweep(sweep=sweep_configuration, project='ppo')
-    wandb.agent(sweep_id=sweep_id, function=main, count=100)
+    wandb.agent(sweep_id=sweep_id, function=main, count=60)
