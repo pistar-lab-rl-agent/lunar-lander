@@ -220,13 +220,13 @@ def main():
             'epochs': EPOCHS,
             'target_score': TARGET_SCORE,
 
-            'learning_rate': 0.0005,
-            'discount_factor': 0.99,
-            'eps_clip': 0.2,
-            'k_epoch': 5,
-            'dropout_rate': 0.1,
-            'is_prelu': True,
-            'is_custom_init': True
+            # 'learning_rate': 0.0005,
+            # 'discount_factor': 0.99,
+            # 'eps_clip': 0.2,
+            # 'k_epoch': 5,
+            # 'dropout_rate': 0.1,
+            # 'is_prelu': True,
+            # 'is_custom_init': True
         }
     )
 
