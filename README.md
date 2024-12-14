@@ -63,3 +63,12 @@ conda install gymnasium-box2d wandb -c conda-forge -y
 ```
 wandb login
 ```
+
+## Reference
+
+- [keras-rl](https://github.com/keras-rl/keras-rl)
+- [clean-rl](https://github.com/vwxyzjn/cleanrl)
+- [udacity/deep-reinforcement-learning](https://github.com/udacity/deep-reinforcement-learning)
+- [yandex-dataschool/Practical_RL](https://github.com/yandexdataschool/Practical_RL)
+- [Curt-Park-Rainbow-RL](https://github.com/Curt-Park/rainbow-is-all-you-need)
+- [AI4Finance-Foundation/ElegantRL](https://github.com/AI4Finance-Foundation/ElegantRL)
