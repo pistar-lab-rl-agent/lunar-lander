@@ -23,11 +23,11 @@ Simplest implementation of lunar-lander
 
 | Implementation                  | Status | Solved Episode | Assigned To |
 |---------------------------------|--------|----------------|-------------|
-| A2C(Monte Carlo version)        | [ ]    | N/A            |             |
-| A2C(TD(0) version)              | [ ]    | N/A            |             |
-| A2C(GAE version)                | [ ]    | N/A            |             |
+| A2C(Monte Carlo version)        | [ ]    | N/A            | 윤효경        |
+| A2C(TD(0) version)              | [ ]    | N/A            | 윤효경        |
+| A2C(GAE version)                | [ ]    | N/A            | 윤효경        |
 | DDPG                            | [ ]    | N/A            | 한일영        |
-| PPO                             | [ ]    | N/A            | 지민기       |
+| PPO (w/o entropy, gae)          | [X]    | 533 (target score: 200)            | 지민기        |
 
 12/21(SAT)/2024
 
@@ -63,3 +63,12 @@ conda install gymnasium-box2d wandb -c conda-forge -y
 ```
 wandb login
 ```
+
+## Reference
+
+- [keras-rl](https://github.com/keras-rl/keras-rl)
+- [clean-rl](https://github.com/vwxyzjn/cleanrl)
+- [udacity-deep-reinforcement-learning](https://github.com/udacity/deep-reinforcement-learning)
+- [yandex-dataschool-practical-rL](https://github.com/yandexdataschool/Practical_RL)
+- [curt-park-rainbow-rl](https://github.com/Curt-Park/rainbow-is-all-you-need)
+- [AI4Finance-Foundation-elegant-rl](https://github.com/AI4Finance-Foundation/ElegantRL)
