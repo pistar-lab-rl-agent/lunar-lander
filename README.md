@@ -68,7 +68,7 @@ wandb login
 
 - [keras-rl](https://github.com/keras-rl/keras-rl)
 - [clean-rl](https://github.com/vwxyzjn/cleanrl)
-- [udacity/deep-reinforcement-learning](https://github.com/udacity/deep-reinforcement-learning)
-- [yandex-dataschool/Practical_RL](https://github.com/yandexdataschool/Practical_RL)
-- [Curt-Park-Rainbow-RL](https://github.com/Curt-Park/rainbow-is-all-you-need)
-- [AI4Finance-Foundation/ElegantRL](https://github.com/AI4Finance-Foundation/ElegantRL)
+- [udacity-deep-reinforcement-learning](https://github.com/udacity/deep-reinforcement-learning)
+- [yandex-dataschool-practical-rL](https://github.com/yandexdataschool/Practical_RL)
+- [curt-park-rainbow-rl](https://github.com/Curt-Park/rainbow-is-all-you-need)
+- [AI4Finance-Foundation-elegant-rl](https://github.com/AI4Finance-Foundation/ElegantRL)
