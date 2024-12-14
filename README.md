@@ -27,7 +27,7 @@ Simplest implementation of lunar-lander
 | A2C(TD(0) version)              | [ ]    | N/A            | 윤효경        |
 | A2C(GAE version)                | [ ]    | N/A            | 윤효경        |
 | DDPG                            | [ ]    | N/A            | 한일영        |
-| PPO                             | [ ]    | N/A            | 지민기        |
+| PPO (w/o entropy, gae)          | [ ]    | N/A            | 지민기        |
 
 12/21(SAT)/2024
 
