@@ -3,6 +3,16 @@ PPO algorithm.
 
 ref
 - https://github.com/bentrevett/pytorch-rl/blob/master/5a%20-%20Proximal%20Policy%20Optimization%20(PPO)%20%5BLunarLander%5D.ipynb
+
+max_score: 281.4308
+
+hyperparams:
+discount_rate = 0.98231
+eps_clip = 0.22885
+is_custom_init = True
+is_prelu = True
+k_epoch = 5
+learning_rate = 0.00029638
 """
 import random
 from typing import Tuple
@@ -209,7 +219,7 @@ def main():
 
     scores, episodes = [], []
     EPOCHS = 1000
-    TARGET_SCORE = 260
+    TARGET_SCORE = 200
 
     wandb.init(
         project='ppo',
@@ -221,9 +231,9 @@ def main():
             'target_score': TARGET_SCORE,
             'dropout_rate': 0.0,
 
-            # 'learning_rate': 0.0005,
-            # 'discount_factor': 0.99,
-            # 'eps_clip': 0.2,
+            # 'learning_rate': 0.00029638,
+            # 'discount_factor': 0.98231,
+            # 'eps_clip': 0.22885,
             # 'k_epoch': 5,
             # 'is_prelu': True,
             # 'is_custom_init': True
