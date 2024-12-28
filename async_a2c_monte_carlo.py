@@ -1,10 +1,7 @@
 '''
-copy any RL model file here.
-
-declare any RL model to be used as RLModel
-
-# RLModel = ActorCriticModel
-
+Main Process 의 AsyncAgent 는 Parameter Server 로 작동
+torch.multiprocessing 을 사용하여 global model 과 global optimizer 를 공유
+NUM_WORKERS: worker process(async agent) 의 개수
 '''
 
 import abc
@@ -154,7 +151,8 @@ class A2CMonteCarloAgent:
         
         # Gradient clipping
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
-        
+
+        # local model 의 optimizer.step() 는 불필요하지만 제거하지 않음. 
         self.optimizer.step()
         
         return actor_loss.item(), critic_loss.item(), entropy_loss.item()
