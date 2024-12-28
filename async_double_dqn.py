@@ -1,10 +1,7 @@
 '''
-copy any RL model file here.
-
-declare any RL model to be used as RLModel
-
-# RLModel = ActorCriticModel
-
+Main Process 의 AsyncAgent 는 Parameter Server 로 작동
+torch.multiprocessing 을 사용하여 global model 과 global optimizer 를 공유
+NUM_WORKERS: worker process(async agent) 의 개수
 '''
 
 import abc
