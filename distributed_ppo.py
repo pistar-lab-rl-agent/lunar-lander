@@ -110,8 +110,9 @@ def worker_process(worker_id,
             done = False
 
             while not done and len(states) < rollout_length:
+                if isinstance(state, tuple): state = state[0]  # noqa: E701
                 action, log_prob, value = select_action(state)
-                next_state, reward, done, _ = env.step(action)
+                next_state, reward, done, turncated, info = env.step(action)
                 
                 states.append(state)
                 actions.append(action)

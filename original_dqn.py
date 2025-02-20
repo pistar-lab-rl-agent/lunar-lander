@@ -17,22 +17,6 @@ def init_seed(seed: int):
     torch.cuda.manual_seed(seed)
 
 
-class AbsAgent(abc.ABC):
-    @abc.abstractmethod
-    def get_action(self, state: np.ndarray) -> int:
-        pass
-
-    @abc.abstractmethod
-    def train(self, *arge, **kwargs) -> Any: 
-        pass
-
-    @abc.abstractmethod
-    def evaluate(self, *args, **kwargs) -> Any:
-        pass
-
-    @abc.abstractmethod
-    def done(self, *args, **kwargs) -> Any:
-        pass
 
 STATE = 0
 ACTION = 1
